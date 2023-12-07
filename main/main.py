@@ -1,50 +1,112 @@
 import mysql.connector
 from mysql.connector import errorcode
 
+def check_role(usr_name, conn, role_to_check):
+
+    cursor = conn.cursor()
+    cursor.execute(f"SHOW GRANTS FOR '{usr_name}'@'localhost';")
+    grants = cursor.fetchall()
+    roles = set()
+
+    for grant in grants:
+        if grant[0].startswith('GRANT'):
+            role = grant[0].split()[1]
+            roles.add(role)
+
+    #print(f"User '{usr_name}' has the following roles: {', '.join(roles)}")
+
+    if role_to_check in roles:
+        #print(f"User '{usr_name}' has the role '{role_to_check}'")
+        return True
+    else:
+        print(f"\nUser '{usr_name}' does not have the role '{role_to_check}'")
+        return False
+
 
 if __name__ == "__main__":
-
-    # Login menu
-    print("Welcome to the Museum Database:")
-    print("In order to proceed please select your role from the list below:")
-    print("1 - DB Admin")
-    print("2 - Employee")
-    print("3 - Browse as guest")
-
-    # User's choice
-    selection = input("\nPlease type 1, 2, or 3 to select your role: ")
-
-    while selection not in ["1", "2", "3"]:
-        selection = input("Please type 1, 2, or 3 to select your role: ")
-
+    # Get username
+    username = ""
     
-    # Connect with database
-    attempts = 5
-    while attempts:
-        try:
-            # Get login details
-            if selection in ["1", "2"]:
-                username = input("Username: ")
-                passcode = input("Password: ")
+    # Checks if it is the correct role for that user
+    back_to_main = True
+
+    while back_to_main:
+        # Login menu
+        print("Welcome to the Museum Database:")
+        print("In order to proceed please select your role from the list below:")
+        print("1 - DB Admin")
+        print("2 - Employee")
+        print("3 - Browse as guest")
+
+        # User's choice
+        selection = input("\nPlease type 1, 2, or 3 to select your role: ")
+
+        while selection not in ["1", "2", "3"]:
+            selection = input("Please type 1, 2, or 3 to select your role: ")
+
+        # Connect with database
+        attempts = 5
+        while attempts:
+            try:
+                # Get login details
+                if selection in ["1", "2"]:
+                    username = input("Username: ")
+                    passcode = input("Password: ")
+                else:
+                    username = 'guest'
+                    passcode = None
+
+                cnx = mysql.connector.connect(user=username, password=passcode,
+                                            host='127.0.0.1',
+                                            database='MUSEUM')
+                
+                is_role = check_role(username, cnx, "`db_admin`@`localhost`")
+
+            except mysql.connector.Error as err:
+                attempts -= 1
+                if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                    print("Something is wrong with your user name or password")
+                else:
+                    print(err)
+                print('')
+
             else:
-                username = 'guest'
-                passcode = None
 
-            cnx = mysql.connector.connect(user=username, password=passcode,
-                                        host='127.0.0.1',
-                                        database='MUSEUM')
+                # Main menu
+                print(f"Welcome {username}:")
 
-        except mysql.connector.Error as err:
-            attempts -= 1
-            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                print("Something is wrong with your user name or password")
-            else:
-                print(err)
-            print('')
+                # Admin option
+                if selection == "1" and check_role(username, cnx, "`db_admin`@`localhost`"):
+                    print("In order to proceed please select option:")
+                    print("1 - Enter SQL commands")
+                    print("2 - Load sql file")
+                    print("3 - Manage users")
+                
+                # Employee option
+                elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
+                    print("In order to proceed please select option:")
+                    print("1 - Enter SQL commands")
+                    print("2 - Load sql file")
+                    print("3 - Manage users")
 
-        else:
-            cnx.close()
+                # Guest option
+                elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
+                    print("In order to proceed please select option:")
+                    print("1 - Enter SQL commands")
+                    print("2 - Load sql file")
+                    print("3 - Manage users")
+                
+                # None of the roles
+                else:
+                    print("Wrong role, please try again \n")
+                    back_to_main = True
+                    break
+                
+                cnx.close()
 
-    # If number of attempts are exceeded
-    print("Number of attempts exceeded")
-    print("\nProgram terminated")
+                # End program once done
+                attempts = 0
+
+        # If number of attempts are exceeded
+        print("Number of attempts exceeded")
+        print("\nProgram terminated")
