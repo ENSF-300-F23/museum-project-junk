@@ -22,7 +22,6 @@ def check_role(usr_name, conn, role_to_check):
         #print(f"\nUser '{usr_name}' does not have the role '{role_to_check}'\n")
         return False
 
-
 if __name__ == "__main__":
     # Get username
     username = ""
@@ -83,6 +82,13 @@ if __name__ == "__main__":
                     print("1 - Enter SQL commands")
                     print("2 - Load sql file")
                     print("3 - Manage users")
+
+                    choice = input("\nEnter your choice: ")
+
+                    while choice not in ["1", "2"]:
+                        choice = input("Enter you choice: ")
+                    
+                    execute_admin_choice(choice, cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
@@ -94,14 +100,28 @@ if __name__ == "__main__":
                     print("2 - Update art piece")
                     print("3 - Remove art piece")
 
+                    choice = input("\nEnter your choice: ")
+
+                    while choice not in ["1", "2"]:
+                        choice = input("Enter you choice: ")
+                    
+                    execute_employee_choice(choice, cnx)
+
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
                     back_to_main = False
 
                     print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
-                    print("1 - View art piece details")
-                    print("2 - View exhibitions")
+                    print("1 - View art piece(s) details")
+                    print("2 - View exhibition(s)")
+
+                    choice = input("\nEnter your choice: ")
+
+                    while choice not in ["1", "2"]:
+                        choice = input("Enter you choice: ")
+                    
+                    execute_guest_choice(choice, cnx)
                 
                 # None of the roles
                 else:
