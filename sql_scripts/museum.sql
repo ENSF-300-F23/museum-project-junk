@@ -231,6 +231,7 @@ CREATE TABLE HISTORY_OF_ART_OBJECT_CHANGES (
 -- After deletion of exhibition in exhibitions, remove all matching exhibitions (with art objects)
 -- from relationship displayed_in
 DELIMITER //
+DROP TRIGGER IF EXISTS remove_art_object_from_deleted_exhibition;
 CREATE TRIGGER remove_art_object_from_deleted_exhibition
 BEFORE DELETE ON EXHIBITIONS
 FOR EACH ROW
@@ -244,6 +245,7 @@ DELIMITER ;
 -- 2 - Relationship between borrowed_collection and collections
 -- after deletion of collection from collections, delete entire borrowed collection
 DELIMITER //
+DROP TRIGGER IF EXISTS delete_borrowed_collection_on_collection_delete;
 CREATE TRIGGER delete_borrowed_collection_on_collection_delete
 AFTER DELETE ON COLLECTIONS
 FOR EACH ROW
@@ -258,6 +260,7 @@ DELIMITER ;
 -- 3 - Relationship between art_object and exhibitions
 -- after deletion of art object, remove matching art object from exhibition from displayed_in
 DELIMITER //
+DROP TRIGGER IF EXISTS remove_art_object_from_exhibition_when_deleted;
 CREATE TRIGGER remove_art_object_from_exhibition_when_deleted
 AFTER DELETE ON ART_OBJECT
 FOR EACH ROW
@@ -272,6 +275,7 @@ DELIMITER ;
 -- after delete of art object, remove all occurances of tuples matching art object id from
 -- permanent_collection, borrowed_collection, painting, sculpture, statue, other relations
 DELIMITER //
+DROP TRIGGER IF EXISTS delete_art_object_specializations;
 CREATE TRIGGER delete_art_object_specializations
 AFTER DELETE ON ART_OBJECT
 FOR EACH ROW

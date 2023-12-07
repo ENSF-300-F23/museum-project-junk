@@ -4,6 +4,7 @@ USE MUSEUM;
 
 -- Track history of changes to the title and description of art_object
 DELIMITER //
+DROP TRIGGER IF EXISTS track_art_object_changes;
 CREATE TRIGGER track_art_object_changes
 BEFORE UPDATE ON ART_OBJECT
 FOR EACH ROW
