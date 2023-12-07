@@ -252,6 +252,9 @@ FOR EACH ROW
 BEGIN
     DELETE  FROM BORROWED_COLLECTION
             WHERE Collection_name = OLD.C_name;
+    UPDATE ART_OBJECT
+    SET Collection_type = 'not_known'
+    WHERE Collection_type = OLD.C_name;
 END;
 //
 DELIMITER ;
