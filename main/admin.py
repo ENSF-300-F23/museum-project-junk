@@ -99,5 +99,66 @@ def execute_admin_choice(choice, conn):
 
                 # Commit changes to the database
                 conn.commit()
-                print("User added successfully!")
+                print("User added successfully!\n")
+            
+            elif choice == "3":
+                print("")
+
+                choice = input("Change user status or role (s or r): ")
+
+                while choice not in ["s", "r"]:
+                    choice = input("Change user status or role (s or r): ")
+
+                if choice == "s":
+                    # SQL query to update user's role based on the username and new status
+
+                    username = input("Enter username: ")
+
+                    new_status = input("Enter new status (active, blocked, suspended): ")
+
+                    while new_status not in ["active", "blocked", "suspended"]:
+                        new_status = input("Change user status or role (s or r): ")
+
+                    if new_status != "active":
+                        if new_status == 'blocked':
+                            new_role = 'blocked@localhost'
+                        elif new_status == 'suspended':
+                            new_role = 'guest@localhost'
+
+                        sql = "UPDATE USERS SET User_role = %s, Usr_status = %s WHERE Username = %s"
+                        values = (new_role, new_status, username)
+                    
+                    else:
+                        sql = "UPDATE USERS SET Usr_status = %s WHERE Username = %s"
+                        values = (new_status, username)
+
+                    # Execute the query
+                    cursor.execute(sql, values)
+
+                    # Commit changes to the database
+                    conn.commit()
+                    print("User status updated successfully!")
+                
+                if choice == "r":
+                    # SQL query to update user's role based on the username and new status
+
+                    username = input("Enter username: ")
+
+                    new_role = input("Enter new status (db_manager, employee, guest, blocked): ")
+
+                    while new_role not in ["db_manager", "employee", "guest", "blocked"]:
+                        new_role = input("Enter new status (db_manager, employee, guest, blocked): ")
+
+                    sql = "UPDATE USERS SET User_role = %s WHERE Username = %s"
+                    values = (new_role + '@localhost', username)
+
+                    # Execute the query
+                    cursor.execute(sql, values)
+
+                    # Commit changes to the database
+                    conn.commit()
+                    print("User role updated successfully!")
+
+
+
 
