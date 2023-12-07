@@ -19,7 +19,7 @@ def check_role(usr_name, conn, role_to_check):
         #print(f"User '{usr_name}' has the role '{role_to_check}'")
         return True
     else:
-        print(f"\nUser '{usr_name}' does not have the role '{role_to_check}'")
+        #print(f"\nUser '{usr_name}' does not have the role '{role_to_check}'\n")
         return False
 
 
@@ -73,10 +73,12 @@ if __name__ == "__main__":
             else:
 
                 # Main menu
-                print(f"Welcome {username}:")
 
                 # Admin option
                 if selection == "1" and check_role(username, cnx, "`db_admin`@`localhost`"):
+                    back_to_main = False
+
+                    print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
                     print("1 - Enter SQL commands")
                     print("2 - Load sql file")
@@ -84,6 +86,9 @@ if __name__ == "__main__":
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
+                    back_to_main = False
+
+                    print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
                     print("1 - Enter SQL commands")
                     print("2 - Load sql file")
@@ -91,6 +96,9 @@ if __name__ == "__main__":
 
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
+                    back_to_main = False
+
+                    print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
                     print("1 - Enter SQL commands")
                     print("2 - Load sql file")
@@ -104,9 +112,10 @@ if __name__ == "__main__":
                 
                 cnx.close()
 
-                # End program once done
-                attempts = 0
+                # End program second loop done (interfaces selection)
+                break
 
         # If number of attempts are exceeded
-        print("Number of attempts exceeded")
-        print("\nProgram terminated")
+        if attempts == 0:
+            print("Number of attempts exceeded")
+            print("\nProgram terminated")
