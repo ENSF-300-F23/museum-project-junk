@@ -47,3 +47,57 @@ def execute_admin_choice(choice, conn):
         print("\n")
 
     elif choice == "3":
+        keep_going = True
+        while(keep_going):
+            print("In order to proceed please select option:")
+            print("1 - Add user")
+            print("2 - Remove user")
+            print("3 - Manage users")
+            print("q - Quit")
+
+            choice = input("\nEnter your choice: ")
+
+            while choice not in ["1", "2", "3", "q"]:
+                choice = input("Enter your choice: ")
+
+            if (choice.lower() == 'q'):
+                keep_going = False
+
+            
+            if choice == "1":
+                print("")
+
+                username = input("Enter username to be added: ") or None
+
+                while username == None or username[0] == " ":
+                    username = input("Enter username to be added: ") or None
+
+                password = input("Enter password: ")
+
+                role = input("Enter role (employee, guest): ")
+                while role not in ["employee", "guest"]:
+                    role = input("Enter username to be added: ") or None
+
+                status = input("Enter status (active, suspended, blocked): ")
+                while status not in ["active", "suspended", "blocked"]:
+                    status = input("Enter username to be added: ") or None
+                
+                add_usr = f"""
+                DROP USER IF EXISTS '{username}'@'localhost';
+                CREATE USER '{username}'@'localhost' IDENTIFIED BY '{password}';
+                GRANT role_name TO '{role}'@'localhost';
+                """
+
+                cursor.execute(add_usr)
+                conn.commit()
+
+                sql = "INSERT INTO USERS (Username, Usr_password, User_role, Usr_status) VALUES (%s, %s, %s, %s)"
+                values = (username, password, role, status)
+
+                # Execute the query
+                cursor.execute(sql, values)
+
+                # Commit changes to the database
+                conn.commit()
+                print("User added successfully!")
+
