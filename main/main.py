@@ -81,51 +81,69 @@ if __name__ == "__main__":
                 if selection == "1" and check_role(username, cnx, "`db_admin`@`localhost`"):
                     back_to_main = False
 
-                    print(f"\nWelcome {username}\n")
-                    print("In order to proceed please select option:")
-                    print("1 - Enter SQL commands")
-                    print("2 - Load sql file")
-                    print("3 - Manage users")
+                    keep_going = True
+                    while(keep_going):
+                        print(f"\nWelcome {username}\n")
+                        print("In order to proceed please select option:")
+                        print("1 - Enter SQL commands")
+                        print("2 - Load sql file")
+                        print("3 - Manage users")
+                        print("q - Quit")
 
-                    choice = input("\nEnter your choice: ")
+                        choice = input("\nEnter your choice: ")
 
-                    while choice not in ["1", "2"]:
-                        choice = input("Enter you choice: ")
-                    
-                    execute_admin_choice(choice, cnx)
+                        while choice not in ["1", "2"]:
+                            choice = input("Enter you choice: ")
+
+                        if (choice.lower() == 'q'):
+                            keep_going = False
+                        
+                        keep_going = execute_admin_choice(choice, cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
                     back_to_main = False
 
-                    print(f"\nWelcome {username}\n")
-                    print("In order to proceed please select option:")
-                    print("1 - Add art piece")
-                    print("2 - Update art piece")
-                    print("3 - Remove art piece")
+                    keep_going = True
+                    while(keep_going):
+                        print(f"\nWelcome {username}\n")
+                        print("In order to proceed please select option:")
+                        print("1 - Add art piece")
+                        print("2 - Update art piece")
+                        print("3 - Remove art piece")
+                        print("q - Quit")
 
-                    choice = input("\nEnter your choice: ")
+                        choice = input("\nEnter your choice: ")
 
-                    while choice not in ["1", "2"]:
-                        choice = input("Enter you choice: ")
-                    
-                    execute_employee_choice(choice, cnx)
+                        while choice not in ["1", "2"]:
+                            choice = input("Enter you choice: ")
+
+                        if (choice.lower() == 'q'):
+                            keep_going = False
+                        
+                        keep_going = execute_employee_choice(choice, cnx)
 
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
                     back_to_main = False
 
-                    print(f"\nWelcome {username}\n")
-                    print("In order to proceed please select option:")
-                    print("1 - View art piece(s) details")
-                    print("2 - View exhibition(s)")
+                    keep_going = True
+                    while(keep_going):
+                        print(f"\nWelcome {username}\n")
+                        print("In order to proceed please select option:")
+                        print("1 - View art piece(s) details")
+                        print("2 - View exhibition(s)")
+                        print("q - Quit")
 
-                    choice = input("\nEnter your choice: ")
+                        choice = input("\nEnter your choice: ")
 
-                    while choice not in ["1", "2"]:
-                        choice = input("Enter you choice: ")
-                    
-                    execute_guest_choice(choice, cnx)
+                        while choice not in ["1", "2"]:
+                            choice = input("Enter you choice: ")
+                        
+                        if (choice.lower() == 'q'):
+                            keep_going = False
+                        
+                        keep_going = execute_guest_choice(choice, cnx)
                 
                 # None of the roles
                 else:
