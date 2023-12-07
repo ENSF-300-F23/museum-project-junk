@@ -92,8 +92,8 @@ if __name__ == "__main__":
 
                         choice = input("\nEnter your choice: ")
 
-                        while choice not in ["1", "2"]:
-                            choice = input("Enter you choice: ")
+                        while choice not in ["1", "2", "3", "q"]:
+                            choice = input("Enter your choice: ")
 
                         if (choice.lower() == 'q'):
                             keep_going = False
@@ -115,8 +115,8 @@ if __name__ == "__main__":
 
                         choice = input("\nEnter your choice: ")
 
-                        while choice not in ["1", "2"]:
-                            choice = input("Enter you choice: ")
+                        while choice not in ["1", "2", "3", "q"]:
+                            choice = input("Enter your choice: ")
 
                         if (choice.lower() == 'q'):
                             keep_going = False
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                         keep_going = execute_employee_choice(choice, cnx)
 
                 # Guest option
-                elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
+                elif selection == "3" and check_role(username, cnx, "`guest_usr`@`localhost`"):
                     back_to_main = False
 
                     keep_going = True
@@ -137,13 +137,13 @@ if __name__ == "__main__":
 
                         choice = input("\nEnter your choice: ")
 
-                        while choice not in ["1", "2"]:
-                            choice = input("Enter you choice: ")
+                        while choice not in ["1", "2", "q"]:
+                            choice = input("Enter your choice: ")
                         
                         if (choice.lower() == 'q'):
                             keep_going = False
                         
-                        keep_going = execute_guest_choice(choice, cnx)
+                        execute_guest_choice(choice, cnx)
                 
                 # None of the roles
                 else:
