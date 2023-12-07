@@ -211,18 +211,6 @@ VALUES
 ('T2022_005', 'Britains Celebration');
 -- end displayed_in
 
--- HISTORY_OF_ART_OBJECT_CHANGES table --
-DROP TABLE IF EXISTS HISTORY_OF_ART_OBJECT_CHANGES;
-CREATE TABLE HISTORY_OF_ART_OBJECT_CHANGES (
-    change_id INT AUTO_INCREMENT PRIMARY KEY,
-    art_Id_no VARCHAR(10) NOT NULL,
-    old_title VARCHAR(50),
-    new_title VARCHAR(50),
-    old_description VARCHAR(150),
-    new_description VARCHAR(150),
-    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 
 -- DELETION TRIGGERS --
 
