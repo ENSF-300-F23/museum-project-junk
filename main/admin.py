@@ -5,9 +5,9 @@ def execute_admin_choice(choice, conn):
     # Execute a query
     cursor.execute("USE MUSEUM")
 
+    print("")
+    
     if choice == "1":
-        print("")
-
         while True:
             sql_command = input("Enter SQL command ('q' to quit): ")
             if sql_command.lower() == 'q':
@@ -23,4 +23,25 @@ def execute_admin_choice(choice, conn):
 
     
     elif choice == "2":
-        pass
+        # Get file path input from the user
+        file_path = input("Enter the file path to the SQL file: ")
+
+        try:
+            with open(file_path, 'r') as sql_file:
+                sql_commands = sql_file.read()
+
+                # Split SQL commands by semicolon
+                commands_list = sql_commands.split(';')
+
+                for command in commands_list:
+                    cursor.execute(command)
+                    conn.commit()
+
+            print("SQL commands executed successfully from the file.")
+
+        except FileNotFoundError:
+            print("File not found. Please enter a valid file path.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+        print("\n")
