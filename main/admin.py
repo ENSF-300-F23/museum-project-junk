@@ -45,3 +45,5 @@ def execute_admin_choice(choice, conn):
             print(f"Error: {e}")
 
         print("\n")
+
+    elif choice == "3":

@@ -98,7 +98,7 @@ if __name__ == "__main__":
                         if (choice.lower() == 'q'):
                             keep_going = False
                         
-                        keep_going = execute_admin_choice(choice, cnx)
+                        execute_admin_choice(choice, cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
@@ -121,7 +121,7 @@ if __name__ == "__main__":
                         if (choice.lower() == 'q'):
                             keep_going = False
                         
-                        keep_going = execute_employee_choice(choice, cnx)
+                        execute_employee_choice(choice, cnx)
 
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest_usr`@`localhost`"):
