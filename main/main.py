@@ -80,10 +80,10 @@ if __name__ == "__main__":
                 # Admin option
                 if selection == "1" and check_role(username, cnx, "`db_admin`@`localhost`"):
                     back_to_main = False
-
+                    
+                    print(f"\nWelcome {username}\n")
                     keep_going = True
                     while(keep_going):
-                        print(f"\nWelcome {username}\n")
                         print("In order to proceed please select option:")
                         print("1 - Enter SQL commands")
                         print("2 - Load sql file")
@@ -103,10 +103,10 @@ if __name__ == "__main__":
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
                     back_to_main = False
-
+                    
+                    print(f"\nWelcome {username}\n")
                     keep_going = True
                     while(keep_going):
-                        print(f"\nWelcome {username}\n")
                         print("In order to proceed please select option:")
                         print("1 - Add art piece")
                         print("2 - Update art piece")
@@ -128,9 +128,10 @@ if __name__ == "__main__":
                     back_to_main = False
 
                     keep_going = True
+
+                    print(f"\nWelcome {username}")
                     while(keep_going):
-                        print(f"\nWelcome {username}\n")
-                        print("In order to proceed please select option:")
+                        print("\nIn order to proceed please select option:")
                         print("1 - View art piece(s) details")
                         print("2 - View exhibition(s)")
                         print("q - Quit")
@@ -159,4 +160,5 @@ if __name__ == "__main__":
         # If number of attempts are exceeded
         if attempts == 0:
             print("Number of attempts exceeded")
-            print("\nProgram terminated")
+    
+    print("\nProgram terminated")
