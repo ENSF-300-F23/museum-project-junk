@@ -76,7 +76,8 @@ CREATE TABLE ART_OBJECT (
     Style               varchar(50)     not null,
 
 	PRIMARY KEY (Id_no),
-    FOREIGN KEY (Artist_name) REFERENCES ARTIST (A_name)
+    FOREIGN KEY (Artist_name) REFERENCES ARTIST (A_name),
+                ON DELETE SET NULL  ON UPDATE CASCADE
 );
 
 INSERT INTO ART_OBJECT (Id_no, Artist_name, Year_created, Title, Art_descr, Origin, Epoch, Art_type, Collection_type, Style)
