@@ -280,3 +280,58 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+-- CREATING USERS AND ROLES --
+
+-- ROLES
+DROP ROLE IF EXISTS db_admin@localhost, employee@localhost, guest_usr@localhost;
+CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
+
+-- ROLE PRIVILEGES
+-- Admin
+GRANT ALL PRIVILEGES ON MUSEUM.* TO db_admin@localhost;
+
+-- Employee
+GRANT SELECT ON MUSEUM.* TO employee@localhost;
+GRANT INSERT ON MUSEUM.* TO employee@localhost;
+GRANT UPDATE ON MUSEUM.* TO employee@localhost;
+GRANT DELETE ON MUSEUM.* TO employee@localhost;
+
+-- Guest
+GRANT SELECT ON MUSEUM.* TO guest_usr@localhost;
+
+
+-- DEFAULT USERS
+-- Admin
+DROP USER IF EXISTS museum_admin@localhost;
+CREATE USER museum_admin@localhost IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT db_admin@localhost TO museum_admin@localhost;
+SET DEFAULT ROLE ALL TO museum_admin@localhost;
+
+-- Employee
+DROP USER IF EXISTS john@localhost;
+CREATE USER john@localhost IDENTIFIED WITH mysql_native_password BY 'john';
+GRANT employee@localhost TO john@localhost;
+SET DEFAULT ROLE ALL TO john@localhost;
+
+-- Guest
+DROP USER IF EXISTS guest@localhost;
+CREATE USER guest@localhost;
+GRANT guest_usr@localhost TO guest@localhost;
+SET DEFAULT ROLE ALL TO guest@localhost;
+
+
+-- USERS --
+CREATE TABLE USERS (
+    Username VARCHAR(50) PRIMARY KEY,
+    Usr_password VARCHAR(255),
+    Usr_status ENUM('active', 'blocked', 'suspended') DEFAULT 'active'
+);
+
+INSERT INTO USERS (Username, Usr_password, Usr_status)
+VALUES
+('museum_admin', 'password', 'active'),
+('john', 'john', 'active'),
+('guest', NULL, 'active');
+-- end users
+
