@@ -90,9 +90,9 @@ if __name__ == "__main__":
 
                     print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
-                    print("1 - Enter SQL commands")
-                    print("2 - Load sql file")
-                    print("3 - Manage users")
+                    print("1 - Add art piece")
+                    print("2 - Update art piece")
+                    print("3 - Remove art piece")
 
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest`@`localhost`"):
@@ -100,9 +100,8 @@ if __name__ == "__main__":
 
                     print(f"\nWelcome {username}\n")
                     print("In order to proceed please select option:")
-                    print("1 - Enter SQL commands")
-                    print("2 - Load sql file")
-                    print("3 - Manage users")
+                    print("1 - View art piece details")
+                    print("2 - View exhibitions")
                 
                 # None of the roles
                 else:
