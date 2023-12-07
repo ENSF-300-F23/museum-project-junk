@@ -237,7 +237,7 @@ GRANT DELETE ON MUSEUM.* TO employee@localhost;
 GRANT SELECT ON MUSEUM.* TO guest_usr@localhost;
 
 -- Blocked
-REVOKE ALL PRIVILEGES ON MUSEUM.* TO blocked@localhost;
+-- No privileges
 
 
 -- DEFAULT USERS
