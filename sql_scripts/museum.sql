@@ -220,7 +220,7 @@ VALUES
 -- CREATING USERS AND ROLES --
 
 -- ROLES
-DROP ROLE IF EXISTS db_admin@localhost, employee@localhost, guest_usr@localhost;
+DROP ROLE IF EXISTS db_admin@localhost, employee@localhost, guest_usr@localhost, blocked@localhost;
 CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
 
 -- ROLE PRIVILEGES
@@ -235,6 +235,9 @@ GRANT DELETE ON MUSEUM.* TO employee@localhost;
 
 -- Guest
 GRANT SELECT ON MUSEUM.* TO guest_usr@localhost;
+
+-- Blocked
+REVOKE ALL PRIVILEGES ON MUSEUM.* TO blocked@localhost;
 
 
 -- DEFAULT USERS
