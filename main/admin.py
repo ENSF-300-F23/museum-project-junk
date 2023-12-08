@@ -1,4 +1,4 @@
-def update(conn):
+def admin_update(conn):
     # Get a cursor
     cursor = conn.cursor()
         

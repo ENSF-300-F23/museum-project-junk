@@ -1,4 +1,5 @@
 from admin import execute_admin_choice
+from admin import admin_update
 from employee import execute_employee_choice
 from guest import execute_guest_choice
 
@@ -99,6 +100,7 @@ if __name__ == "__main__":
                             keep_going = False
                         
                         execute_admin_choice(choice, cnx)
+                    admin_update(cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
