@@ -1,3 +1,17 @@
+def update(conn):
+    # Get a cursor
+    cursor = conn.cursor()
+        
+    # Execute a query
+    cursor.execute("USE MUSEUM")
+
+    # Retrieve usernames and statuses from the USERS table
+    select_users_query = "SELECT Username, Usr_role, Usr_status FROM USERS"
+    cursor.execute(select_users_query)
+    
+    users = cursor.fetchall()
+        
+
 def execute_admin_choice(choice, conn):
     # Get a cursor
     cursor = conn.cursor()
@@ -109,13 +123,6 @@ def execute_admin_choice(choice, conn):
                 # Execute the query to remove the user from USERS table
                 cursor.execute(delete_user_query, user_values)
 
-                # SQL queries to revoke roles and privileges associated with the user
-                revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
-                revoke_values = (username,)
-
-                # Execute the queries to revoke roles and privileges
-                cursor.execute(revoke_roles_query, revoke_values)
-
                 # Commit changes to the database
                 conn.commit()
                 print(f"User '{username}' removed successfully!\n")
@@ -141,37 +148,9 @@ def execute_admin_choice(choice, conn):
                     if new_status != "active":
                         if new_status == 'blocked':
                             new_role = 'blocked@localhost'
-                            # SQL queries to revoke roles and privileges associated with the user
-                            revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
-                            revoke_values = (username,)
-
-                            # Execute the queries to revoke roles and privileges
-                            cursor.execute(revoke_roles_query, revoke_values)
-
-
-                            update_roles_query = "GRANT blocked@localhost TO %s@localhost;"
-                            update_values = (username,)
-                            cursor.execute(update_roles_query, update_values)
-
-                            # Commit changes to the database
-                            conn.commit()
 
                         elif new_status == 'suspended':
                             new_role = 'guest@localhost'
-                            # SQL queries to revoke roles and privileges associated with the user
-                            revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
-                            revoke_values = (username,)
-
-                            # Execute the queries to revoke roles and privileges
-                            cursor.execute(revoke_roles_query, revoke_values)
-
-
-                            update_roles_query = "GRANT guest_usr@localhost TO %s@localhost;"
-                            update_values = (username,)
-                            cursor.execute(update_roles_query, update_values)
-
-                            # Commit changes to the database
-                            conn.commit()
 
                         sql = "UPDATE USERS SET Usr_role = %s, Usr_status = %s WHERE Username = %s"
                         values = (new_role, new_status, username)
@@ -200,24 +179,6 @@ def execute_admin_choice(choice, conn):
 
                     sql = "UPDATE USERS SET Usr_role = %s WHERE Username = %s"
                     values = (new_role + '@localhost', username)
-
-                    # Execute the query
-                    cursor.execute(sql, values)
-
-                    #SQL queries to revoke roles and privileges associated with the user
-                    revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
-                    revoke_values = (username,)
-
-                    # Execute the queries to revoke roles and privileges
-                    cursor.execute(revoke_roles_query, revoke_values)
-
-
-                    update_roles_query = "GRANT %s@localhost TO %s@localhost;"
-                    update_values = (new_role, username)
-                    cursor.execute(update_roles_query, update_values)
-
-                     # Commit changes to the database
-                    conn.commit()
 
                     # Commit changes to the database
                     conn.commit()
