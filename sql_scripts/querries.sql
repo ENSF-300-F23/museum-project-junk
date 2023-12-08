@@ -1,6 +1,7 @@
 USE MUSEUM;
 
 -- UPDATE TRIGGER --
+DROP TRIGGER IF EXISTS track_art_object_changes;
 
 -- HISTORY_OF_ART_OBJECT_CHANGES table --
 DROP TABLE IF EXISTS HISTORY_OF_ART_OBJECT_CHANGES;
@@ -16,7 +17,6 @@ CREATE TABLE HISTORY_OF_ART_OBJECT_CHANGES (
 
 -- Track history of changes to the title and description of art_object
 DELIMITER //
-DROP TRIGGER IF EXISTS track_art_object_changes;
 CREATE TRIGGER track_art_object_changes
 BEFORE UPDATE ON ART_OBJECT
 FOR EACH ROW

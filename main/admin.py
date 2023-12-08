@@ -37,14 +37,12 @@ def execute_admin_choice(choice, conn):
                     cursor.execute(command)
                     conn.commit()
 
-            print("SQL commands executed successfully from the file.")
+            print("\nSQL commands executed successfully from the file.\n")
 
         except FileNotFoundError:
-            print("File not found. Please enter a valid file path.")
+            print("\nFile not found. Please enter a valid file path.")
         except Exception as e:
             print(f"Error: {e}")
-
-        print("\n")
 
     elif choice == "3":
         keep_going = True
