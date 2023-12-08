@@ -142,11 +142,18 @@ def execute_admin_choice(choice, conn):
                 # SQL query to remove user from USERS table
                 username = input("Enter username: ")
 
+                # Remove user from table
                 delete_user_query = "DELETE FROM USERS WHERE Username = %s"
                 user_values = (username,)
 
                 # Execute the query to remove the user from USERS table
                 cursor.execute(delete_user_query, user_values)
+
+                # Revmove user from database
+                delete_user_query = "DROP USER IF EXISTS '{username}'@'localhost';"
+
+                # Execute the query to remove the user from USERS table
+                cursor.execute(delete_user_query)
 
                 # Commit changes to the database
                 conn.commit()
