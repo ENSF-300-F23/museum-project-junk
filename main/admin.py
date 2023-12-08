@@ -9,6 +9,7 @@ def admin_update(conn):
     select_users_query = "SELECT Username, Usr_password, Usr_role, Usr_status FROM USERS"
     cursor.execute(select_users_query)
     
+    empty = cursor.fetchone()
     users = cursor.fetchall()
 
     for row in users:
