@@ -6,10 +6,34 @@ def update(conn):
     cursor.execute("USE MUSEUM")
 
     # Retrieve usernames and statuses from the USERS table
-    select_users_query = "SELECT Username, Usr_role, Usr_status FROM USERS"
+    select_users_query = "SELECT Username, Usr_password, Usr_role, Usr_status FROM USERS"
     cursor.execute(select_users_query)
     
     users = cursor.fetchall()
+
+    for row in users:
+        username = str(row[0])
+        password = str(row[1])
+        role =  str(row[2])
+        status = str(row[3])
+        querries = ''
+
+        if status == "blocked":
+            querries = f"""
+            DROP USER IF EXISTS {username}@localhost;
+            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY {password};
+            GRANT blocked@localhost TO {username}@localhost;
+            SET DEFAULT ROLE ALL TO {username}@localhost; 
+             """
+        elif status == "suspended":
+            querries = f"""
+            DROP USER IF EXISTS {username}@localhost;
+            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY {password};
+            GRANT guest@localhost TO {username}@localhost;
+            SET DEFAULT ROLE ALL TO {username}@localhost; 
+             """
+        cursor.execute(querries)
+        conn.commit()
         
 
 def execute_admin_choice(choice, conn):
