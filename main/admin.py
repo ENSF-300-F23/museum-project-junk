@@ -100,6 +100,27 @@ def execute_admin_choice(choice, conn):
                 # Commit changes to the database
                 conn.commit()
                 print("User added successfully!\n")
+
+            elif choice == "2":
+                # SQL query to remove user from USERS table
+                username = input("Enter username: ")
+
+                delete_user_query = "DELETE FROM USERS WHERE Username = %s"
+                user_values = (username,)
+
+                # Execute the query to remove the user from USERS table
+                cursor.execute(delete_user_query, user_values)
+
+                # SQL queries to revoke roles and privileges associated with the user
+                revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
+                revoke_values = (username,)
+
+                # Execute the queries to revoke roles and privileges
+                cursor.execute(revoke_roles_query, revoke_values)
+
+                # Commit changes to the database
+                conn.commit()
+                print(f"User '{username}' removed successfully!\n")
             
             elif choice == "3":
                 print("")
@@ -122,11 +143,41 @@ def execute_admin_choice(choice, conn):
                     if new_status != "active":
                         if new_status == 'blocked':
                             new_role = 'blocked@localhost'
+                            # SQL queries to revoke roles and privileges associated with the user
+                            revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
+                            revoke_values = (username,)
+
+                            # Execute the queries to revoke roles and privileges
+                            cursor.execute(revoke_roles_query, revoke_values)
+
+
+                            update_roles_query = "GRANT blocked@localhost TO %s@localhost;"
+                            update_values = (username,)
+                            cursor.execute(update_roles_query, update_values)
+
+                            # Commit changes to the database
+                            conn.commit()
+
                         elif new_status == 'suspended':
                             new_role = 'guest@localhost'
+                            # SQL queries to revoke roles and privileges associated with the user
+                            revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
+                            revoke_values = (username,)
 
-                        sql = "UPDATE USERS SET User_role = %s, Usr_status = %s WHERE Username = %s"
+                            # Execute the queries to revoke roles and privileges
+                            cursor.execute(revoke_roles_query, revoke_values)
+
+
+                            update_roles_query = "GRANT guest_usr@localhost TO %s@localhost;"
+                            update_values = (username,)
+                            cursor.execute(update_roles_query, update_values)
+
+                            # Commit changes to the database
+                            conn.commit()
+
+                        sql = "UPDATE USERS SET Usr_role = %s, Usr_status = %s WHERE Username = %s"
                         values = (new_role, new_status, username)
+
                     
                     else:
                         sql = "UPDATE USERS SET Usr_status = %s WHERE Username = %s"
@@ -137,7 +188,7 @@ def execute_admin_choice(choice, conn):
 
                     # Commit changes to the database
                     conn.commit()
-                    print("User status updated successfully!")
+                    print("User status updated successfully!\n")
                 
                 if choice == "r":
                     # SQL query to update user's role based on the username and new status
@@ -145,19 +196,34 @@ def execute_admin_choice(choice, conn):
                     username = input("Enter username: ")
 
                     new_role = input("Enter new status (db_manager, employee, guest, blocked): ")
-
+ 
                     while new_role not in ["db_manager", "employee", "guest", "blocked"]:
                         new_role = input("Enter new status (db_manager, employee, guest, blocked): ")
 
-                    sql = "UPDATE USERS SET User_role = %s WHERE Username = %s"
+                    sql = "UPDATE USERS SET Usr_role = %s WHERE Username = %s"
                     values = (new_role + '@localhost', username)
 
                     # Execute the query
                     cursor.execute(sql, values)
 
+                    #SQL queries to revoke roles and privileges associated with the user
+                    revoke_roles_query = "REVOKE ALL ROLES, PRIVILEGES FROM %s@localhost"
+                    revoke_values = (username,)
+
+                    # Execute the queries to revoke roles and privileges
+                    cursor.execute(revoke_roles_query, revoke_values)
+
+
+                    update_roles_query = "GRANT %s@localhost TO %s@localhost;"
+                    update_values = (new_role, username)
+                    cursor.execute(update_roles_query, update_values)
+
+                     # Commit changes to the database
+                    conn.commit()
+
                     # Commit changes to the database
                     conn.commit()
-                    print("User role updated successfully!")
+                    print("User role updated successfully!\n")
 
 
 
