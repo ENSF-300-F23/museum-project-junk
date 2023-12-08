@@ -100,7 +100,7 @@ if __name__ == "__main__":
                             keep_going = False
                         
                         execute_admin_choice(choice, cnx)
-                    admin_update(cnx)
+                    #admin_update(cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
