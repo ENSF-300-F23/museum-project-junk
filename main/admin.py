@@ -122,7 +122,7 @@ def execute_admin_choice(choice, conn):
                 add_usr = f"""
                 DROP USER IF EXISTS '{username}'@'localhost';
                 CREATE USER '{username}'@'localhost' IDENTIFIED BY '{password}';
-                GRANT role_name TO '{role}'@'localhost';
+                GRANT '{role}'@'localhost' TO '{username}'@'localhost';
                 """
 
                 cursor.execute(add_usr, multi=True)
