@@ -3,6 +3,13 @@ DROP DATABASE IF EXISTS MUSEUM;
 CREATE DATABASE MUSEUM;
 USE MUSEUM;
 
+-- DROP ALL TRIGGERS --
+DROP TRIGGER IF EXISTS remove_art_object_from_deleted_exhibition;
+DROP TRIGGER IF EXISTS delete_borrowed_collection_on_collection_delete;
+DROP TRIGGER IF EXISTS remove_art_object_from_exhibition_when_deleted;
+DROP TRIGGER IF EXISTS delete_art_object_specializations;
+DROP TRIGGER IF EXISTS update_user_role_on_status_change;
+
 -- ARTIST TABLE --
 DROP TABLE IF EXISTS ARTIST;
 CREATE TABLE ARTIST (
@@ -77,6 +84,7 @@ CREATE TABLE ART_OBJECT (
 
 	PRIMARY KEY (Id_no),
     FOREIGN KEY (Artist_name) REFERENCES ARTIST (A_name)
+                ON DELETE SET NULL  ON UPDATE CASCADE
 );
 
 INSERT INTO ART_OBJECT (Id_no, Artist_name, Year_created, Title, Art_descr, Origin, Epoch, Art_type, Collection_type, Style)
@@ -210,14 +218,144 @@ VALUES
 ('T2022_005', 'Britains Celebration');
 -- end displayed_in
 
--- HISTORY_OF_ART_OBJECT_CHANGES table --
-DROP TABLE IF EXISTS HISTORY_OF_ART_OBJECT_CHANGES;
-CREATE TABLE HISTORY_OF_ART_OBJECT_CHANGES (
-    change_id INT AUTO_INCREMENT PRIMARY KEY,
-    art_Id_no VARCHAR(10) NOT NULL,
-    old_title VARCHAR(50),
-    new_title VARCHAR(50),
-    old_description VARCHAR(150),
-    new_description VARCHAR(150),
-    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- CREATING USERS AND ROLES --
+
+-- ROLES
+DROP ROLE IF EXISTS db_admin@localhost, employee@localhost, guest_usr@localhost, blocked@localhost;
+CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
+
+-- ROLE PRIVILEGES
+-- Admin
+GRANT ALL PRIVILEGES ON MUSEUM.* TO db_admin@localhost;
+
+-- Employee
+GRANT SELECT ON MUSEUM.* TO employee@localhost;
+GRANT INSERT ON MUSEUM.* TO employee@localhost;
+GRANT UPDATE ON MUSEUM.* TO employee@localhost;
+GRANT DELETE ON MUSEUM.* TO employee@localhost;
+
+-- Guest
+GRANT SELECT ON MUSEUM.* TO guest_usr@localhost;
+
+-- Blocked
+-- No privileges
+
+
+-- DEFAULT USERS
+-- Admin
+DROP USER IF EXISTS museum_admin@localhost;
+CREATE USER museum_admin@localhost IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT db_admin@localhost TO museum_admin@localhost;
+SET DEFAULT ROLE ALL TO museum_admin@localhost;
+
+-- Employee
+DROP USER IF EXISTS john@localhost;
+CREATE USER john@localhost IDENTIFIED WITH mysql_native_password BY 'john';
+GRANT employee@localhost TO john@localhost;
+SET DEFAULT ROLE ALL TO john@localhost;
+
+-- Guest
+DROP USER IF EXISTS guest@localhost;
+CREATE USER guest@localhost;
+GRANT guest_usr@localhost TO guest@localhost;
+SET DEFAULT ROLE ALL TO guest@localhost;
+
+
+-- USERS --
+CREATE TABLE USERS (
+    Username VARCHAR(50) PRIMARY KEY,
+    Usr_password VARCHAR(255),
+    Usr_role  VARCHAR(50),
+    Usr_status ENUM('active', 'blocked', 'suspended') DEFAULT 'active'
 );
+
+INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status)
+VALUES
+('museum_admin', 'password', 'db_admin@localhost', 'active'),
+('john', 'john', 'employee@localhost', 'active'),
+('guest', NULL, 'guest_usr@localhost', 'active');
+-- end users
+
+-- DELETION TRIGGERS --
+
+-- (if exhibition isn't deleted)
+-- 1 - Relationship between art_object and exhibitions
+-- After deletion of exhibition in exhibitions, remove all matching exhibitions (with art objects)
+-- from relationship displayed_in
+DELIMITER //
+CREATE TRIGGER remove_art_object_from_deleted_exhibition
+BEFORE DELETE ON EXHIBITIONS
+FOR EACH ROW
+BEGIN
+    DELETE  FROM DISPLAYED_IN
+            WHERE Exhibition_name = OLD.E_name;
+END;
+//
+DELIMITER ;
+
+-- 2 - Relationship between borrowed_collection and collections
+-- after deletion of collection from collections, delete entire borrowed collection
+DELIMITER //
+CREATE TRIGGER delete_borrowed_collection_on_collection_delete
+AFTER DELETE ON COLLECTIONS
+FOR EACH ROW
+BEGIN
+    DELETE  FROM BORROWED_COLLECTION
+            WHERE Collection_name = OLD.C_name;
+    UPDATE ART_OBJECT
+    SET Collection_type = 'not_known'
+    WHERE Collection_type = OLD.C_name;
+END;
+//
+DELIMITER ;
+
+-- (if exhibition is deleted)
+-- 3 - Relationship between art_object and exhibitions
+-- after deletion of art object, remove matching art object from exhibition from displayed_in
+DELIMITER //
+CREATE TRIGGER remove_art_object_from_exhibition_when_deleted
+AFTER DELETE ON ART_OBJECT
+FOR EACH ROW
+BEGIN
+    DELETE  FROM DISPLAYED_IN
+            WHERE art_Id_no = OLD.Id_no;
+END;
+//
+DELIMITER ;
+
+-- 4 - art_object specializations
+-- after delete of art object, remove all occurances of tuples matching art object id from
+-- permanent_collection, borrowed_collection, painting, sculpture, statue, other relations
+DELIMITER //
+CREATE TRIGGER delete_art_object_specializations
+AFTER DELETE ON ART_OBJECT
+FOR EACH ROW
+BEGIN
+    DELETE FROM PERMANENT_COLLECTION WHERE art_Id_no = OLD.Id_no;
+    DELETE FROM BORROWED_COLLECTION WHERE art_Id_no = OLD.Id_no;
+    DELETE FROM PAINTING WHERE art_Id_no = OLD.Id_no;
+    DELETE FROM SCULPTURE WHERE art_Id_no = OLD.Id_no;
+    DELETE FROM STATUE WHERE art_Id_no = OLD.Id_no;
+    DELETE FROM OTHER WHERE art_Id_no = OLD.Id_no;
+END;
+//
+DELIMITER ;
+
+
+-- Trigger to update role if status changed in database --
+DELIMITER //
+
+CREATE TRIGGER update_user_role_on_status_change
+BEFORE UPDATE ON USERS
+FOR EACH ROW
+BEGIN
+    IF OLD.Usr_status <> NEW.Usr_status THEN
+        IF NEW.Usr_status = 'blocked' THEN
+            SET NEW.Usr_role = 'blocked@localhost';
+        ELSEIF NEW.Usr_status = 'suspended' THEN
+            SET NEW.Usr_role = 'guest@localhost';
+        END IF;
+    END IF;
+END;
+//
+DELIMITER ;
