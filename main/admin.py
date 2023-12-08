@@ -125,10 +125,10 @@ def execute_admin_choice(choice, conn):
                 GRANT role_name TO '{role}'@'localhost';
                 """
 
-                cursor.execute(add_usr)
+                cursor.execute(add_usr, multi=True)
                 conn.commit()
 
-                sql = "INSERT INTO USERS (Username, Usr_password, User_role, Usr_status) VALUES (%s, %s, %s, %s)"
+                sql = "INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status) VALUES (%s, %s, %s, %s)"
                 values = (username, password, role, status)
 
                 # Execute the query

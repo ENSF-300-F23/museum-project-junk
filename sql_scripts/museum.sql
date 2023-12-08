@@ -227,6 +227,7 @@ CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
 -- ROLE PRIVILEGES
 -- Admin
 GRANT ALL PRIVILEGES ON MUSEUM.* TO db_admin@localhost;
+GRANT CREATE USER ON *.* TO 'db_admin'@'localhost';
 
 -- Employee
 GRANT SELECT ON MUSEUM.* TO employee@localhost;
