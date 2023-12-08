@@ -1,0 +1,97 @@
+GROUP NAME: JUNK
+
+MEMBERS:
+Mendjemo Ngangom Gerard Ledoux (30192835)
+Kosy Onyejemezi (30189156)
+Chidera Awiaka (30165302
+
+BREAKDOWN OF USERS AND ROLES:
+Chidera Awiaka: Data base design (EERD and relational model)
+Kosy Onyejemezi: Creation of sql querries and database
+Mendjemo Ngangom Gerard Ledoux: Creation of python application using already made database
+
+NOTE:
+After initializing the database, the following users will be created with the following passwords and roles:
+
+- Admin: museum_admin (password)
+- Employee: john (john)
+- Guest: guest (none)
+
+User roles:
+	Admin:
+		Can add any sql commands
+
+	Employee:
+		Can perform querries
+		Can insert into the tables (art_object and related specializations)
+		Can update tables (art_object or any related specializations)
+		Can delete from tables (art_object or any related specializations)
+
+	Guest:
+		Can only perform querries
+
+User status:
+	Active:
+		User keeps initial granted role
+
+	Suspended:
+		Gets demoted to guest role until further changes
+
+	Blocked:
+		Does not have access to no the options
+
+Manage art objects *
+	a) modify art pieces details: 
+		- employee(through prompts or data file) 
+	
+	b) search art pieces:
+		- employee (through prompts)
+		- guest (through promps)
+
+	c) search exhibitions:
+		- employee (through prompts)
+		- guest (through prompts)
+
+	* admin can do all these functionalities (through sql commands or sql file)
+
+User Managment *
+	a) Add users:
+		- (through sql prompts or prompts)
+
+	b) Access control (setting roles):
+		- (through sql prompts or prompts)
+	
+	c) Manage users (setting status for users)
+		- (through sql prompts or prompts)
+	
+	* Only the admin can do all these functionalities (also through sql file)
+
+Interfaces:
+	Admin options:
+		- Enter SQL commands
+		- Load sql file
+		- Manage users
+			- Add users
+			- Remove users
+			- Change user roles
+			- Change user status
+
+	Employee options:
+		- Add art piece
+		- Update art piece info
+			- Select table
+				- ART_OBJECT
+				Type:
+				- PAINTING
+				- SCULPTURE
+				- STATUE
+				- OTHER
+				Collection:
+				- PERMANENT COLLECTION
+				- BORROWED_COLLECTION
+		- Remove art piece
+	
+	Guest options:
+		- View art piece(s)
+		- View exhibition (s)
+	
