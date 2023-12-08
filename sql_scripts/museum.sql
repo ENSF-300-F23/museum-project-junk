@@ -273,7 +273,7 @@ INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status)
 VALUES
 ('museum_admin', 'password', 'db_admin@localhost', 'active'),
 ('john', 'john', 'employee@localhost', 'active'),
-('guest', NULL, 'guest_usr@localhost', 'active');
+('guest', NULL, 'guest_usr@localhost', 'blocked');
 -- end users
 
 -- DELETION TRIGGERS --
