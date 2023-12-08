@@ -1,2 +1,2 @@
 def execute_employee_choice(choice, conn):
-    pass
+    print("Will be implemented soon :)")
