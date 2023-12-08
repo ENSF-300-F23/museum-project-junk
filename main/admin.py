@@ -47,7 +47,7 @@ def execute_admin_choice(choice, conn):
     elif choice == "3":
         keep_going = True
         while(keep_going):
-            print("In order to proceed please select option:")
+            print("\nIn order to proceed please select option:")
             print("1 - Add user")
             print("2 - Remove user")
             print("3 - Manage users")
