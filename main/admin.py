@@ -37,7 +37,7 @@ def admin_update(conn):
 
         # Split SQL commands by semicolon
         commands_list = querries.split('\n')
-        print(commands_list)
+        
         for command in commands_list:
             if(command.isspace() == False):
                 cursor.execute(command)

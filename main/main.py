@@ -36,17 +36,22 @@ if __name__ == "__main__":
 
     while back_to_main:
         # Login menu
-        print("Welcome to the Museum Database:")
+        print("\nWelcome to the Museum Database:")
         print("In order to proceed please select your role from the list below:")
         print("1 - DB Admin")
         print("2 - Employee")
         print("3 - Browse as guest")
+        print("q - Quit")
 
         # User's choice
-        selection = input("\nPlease type 1, 2, or 3 to select your role: ")
+        selection = input("\nPlease type 1, 2, 3 or q to select your role: ")
 
-        while selection not in ["1", "2", "3"]:
-            selection = input("Please type 1, 2, or 3 to select your role: ")
+        while selection not in ["1", "2", "3", "q"]:
+            selection = input("Please type 1, 2, 3 or q to select your role: ")
+
+        # End program
+        if selection == "q":
+            break
 
         # Connect with database
         attempts = 3
@@ -80,8 +85,6 @@ if __name__ == "__main__":
 
                 # Admin option
                 if selection == "1" and check_role(username, cnx, "`db_admin`@`localhost`"):
-                    back_to_main = False
-                    
                     print(f"\nWelcome {username}\n")
                     keep_going = True
                     while(keep_going):
@@ -104,8 +107,6 @@ if __name__ == "__main__":
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
-                    back_to_main = False
-                    
                     print(f"\nWelcome {username}\n")
                     keep_going = True
                     while(keep_going):
@@ -127,13 +128,10 @@ if __name__ == "__main__":
 
                 # Employee suspended
                 elif selection == "2" and check_role(username, cnx, "`guest_usr`@`localhost`"):
-                    back_to_main = False
                     print("You have been suspended")
                 
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest_usr`@`localhost`"):
-                    back_to_main = False
-
                     keep_going = True
 
                     print(f"\nWelcome {username}")
@@ -156,7 +154,6 @@ if __name__ == "__main__":
                 # None of the roles
                 else:
                     print("Wrong role, please try again \n")
-                    back_to_main = True
                     break
                 
                 cnx.close()
