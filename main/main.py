@@ -49,7 +49,7 @@ if __name__ == "__main__":
             selection = input("Please type 1, 2, or 3 to select your role: ")
 
         # Connect with database
-        attempts = 5
+        attempts = 3
         while attempts:
             try:
                 # Get login details
@@ -100,7 +100,7 @@ if __name__ == "__main__":
                             keep_going = False
                         
                         execute_admin_choice(choice, cnx)
-                    #admin_update(cnx)
+                    admin_update(cnx)
                 
                 # Employee option
                 elif selection == "2" and check_role(username, cnx, "`employee`@`localhost`"):
@@ -125,6 +125,11 @@ if __name__ == "__main__":
                         
                         execute_employee_choice(choice, cnx)
 
+                # Employee suspended
+                elif selection == "2" and check_role(username, cnx, "`guest_usr`@`localhost`"):
+                    back_to_main = False
+                    print("You have been suspended")
+                
                 # Guest option
                 elif selection == "3" and check_role(username, cnx, "`guest_usr`@`localhost`"):
                     back_to_main = False

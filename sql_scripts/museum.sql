@@ -222,7 +222,7 @@ VALUES
 
 -- ROLES
 DROP ROLE IF EXISTS db_admin@localhost, employee@localhost, guest_usr@localhost, blocked@localhost;
-CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
+CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost, blocked@localhost;
 
 -- ROLE PRIVILEGES
 -- Admin

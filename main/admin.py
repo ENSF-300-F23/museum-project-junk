@@ -22,20 +22,26 @@ def admin_update(conn):
         if status == "blocked":
             querries = f"""
             DROP USER IF EXISTS {username}@localhost;
-            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY {password};
+            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY '{password}';
             GRANT blocked@localhost TO {username}@localhost;
             SET DEFAULT ROLE ALL TO {username}@localhost; 
              """
         elif status == "suspended":
             querries = f"""
             DROP USER IF EXISTS {username}@localhost;
-            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY {password};
-            GRANT guest@localhost TO {username}@localhost;
+            CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY '{password}';
+            GRANT guest_usr@localhost TO {username}@localhost;
             SET DEFAULT ROLE ALL TO {username}@localhost; 
              """
-        cursor.execute(querries)
-        conn.commit()
         
+
+        # Split SQL commands by semicolon
+        commands_list = querries.split('\n')
+        print(commands_list)
+        for command in commands_list:
+            if(command.isspace() == False):
+                cursor.execute(command)
+                conn.commit()
 
 def execute_admin_choice(choice, conn):
     # Get a cursor
