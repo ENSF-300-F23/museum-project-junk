@@ -227,7 +227,10 @@ CREATE ROLE db_admin@localhost, employee@localhost, guest_usr@localhost;
 -- ROLE PRIVILEGES
 -- Admin
 GRANT ALL PRIVILEGES ON MUSEUM.* TO db_admin@localhost;
-GRANT CREATE USER ON *.* TO 'db_admin'@'localhost';
+GRANT ALL PRIVILEGES ON MUSEUM.* TO db_admin@localhost WITH GRANT OPTION;
+GRANT CREATE USER ON *.* TO db_admin@localhost;
+GRANT RELOAD ON *.* TO db_admin@localhost;
+GRANT SUPER ON *.* TO db_admin@localhost;
 
 -- Employee
 GRANT SELECT ON MUSEUM.* TO employee@localhost;
@@ -262,6 +265,8 @@ GRANT guest_usr@localhost TO guest@localhost;
 SET DEFAULT ROLE ALL TO guest@localhost;
 
 
+FLUSH PRIVILEGES;
+
 -- USERS --
 CREATE TABLE USERS (
     Username VARCHAR(50) PRIMARY KEY,
@@ -274,7 +279,7 @@ INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status)
 VALUES
 ('museum_admin', 'password', 'db_admin@localhost', 'active'),
 ('john', 'john', 'employee@localhost', 'active'),
-('guest', NULL, 'guest_usr@localhost', 'blocked');
+('guest', NULL, 'guest_usr@localhost', 'active');
 -- end users
 
 -- DELETION TRIGGERS --

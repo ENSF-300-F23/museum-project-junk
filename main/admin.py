@@ -89,7 +89,7 @@ def execute_admin_choice(choice, conn):
             print("\nIn order to proceed please select option:")
             print("1 - Add user")
             print("2 - Remove user")
-            print("3 - Manage users")
+            print("3 - Change user status/role")
             print("q - Quit")
 
             choice = input("\nEnter your choice: ")
@@ -111,32 +111,47 @@ def execute_admin_choice(choice, conn):
 
                 password = input("Enter password: ")
 
-                role = input("Enter role (employee, guest): ")
-                while role not in ["employee", "guest"]:
-                    role = input("Enter username to be added: ") or None
+                role = input("Enter role (admin, employee): ")
+                while role not in ["employee", "admin"]:
+                    role = input("Enter role (admin, employee): ") or None
 
                 status = input("Enter status (active, suspended, blocked): ")
                 while status not in ["active", "suspended", "blocked"]:
-                    status = input("Enter username to be added: ") or None
+                    status = input("Enter status (active, suspended, blocked): ") or None
                 
-                add_usr = f"""
-                DROP USER IF EXISTS '{username}'@'localhost';
-                CREATE USER '{username}'@'localhost' IDENTIFIED BY '{password}';
-                GRANT '{role}'@'localhost' TO '{username}'@'localhost';
-                """
+                grant_role = ''
+                drop_usr = f"DROP USER IF EXISTS {username}@localhost;"
+                create_usr = f"CREATE USER {username}@localhost IDENTIFIED WITH mysql_native_password BY '{password}';"
 
-                cursor.execute(add_usr, multi=True)
+                if role == 'employee':
+                    grant_role = f"GRANT employee@localhost TO {username}@localhost;"
+
+                elif role == 'admin':
+                    grant_role = f"GRANT admin@localhost TO {username}@localhost;"
+                
+                set_role = f"SET DEFAULT ROLE ALL TO {username}@localhost;"
+
+                cursor.execute(drop_usr)
+                cursor.execute(create_usr)
+                cursor.execute(grant_role)
+                cursor.execute(set_role)
+                cursor.execute("FLUSH PRIVILEGES;")
                 conn.commit()
 
-                sql = "INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status) VALUES (%s, %s, %s, %s)"
-                values = (username, password, role, status)
+                try:
+                    sql = "INSERT INTO USERS (Username, Usr_password, Usr_role, Usr_status) VALUES (%s, %s, %s, %s)"
+                    values = (username, password, role, status)
 
-                # Execute the query
-                cursor.execute(sql, values)
+                    # Execute the query
+                    cursor.execute(sql, values)
 
-                # Commit changes to the database
-                conn.commit()
-                print("User added successfully!\n")
+                except Exception as error:
+                    print("Error: ", error)
+
+                else:
+                    # Commit changes to the database
+                    conn.commit()
+                    print("User added successfully!\n")
 
             elif choice == "2":
                 # SQL query to remove user from USERS table
